@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,9 +13,9 @@ public class SpamFilter {
 	
 	private static final String FILENAME = "C:\\Jude\\assignment1_data\\data\\train";
 	//private static String hamF = "ham", hamF2 = "ham2", spamF = "spam";
-	public static Map<String, Integer> mapWC = new HashMap<String, Integer> ();
-	public static Map<String, Integer> testHamFreq = new HashMap<String, Integer> ();
-	public static Map<String, Integer> testSpamFreq = new HashMap<String, Integer> ();
+	public static Map<String, Float> mapWC = new HashMap<String, Float> ();
+	public static Map<String, Float> testHamFreq = new HashMap<String, Float> ();
+	public static Map<String, Float> testSpamFreq = new HashMap<String, Float> ();
 
 	
 	
@@ -24,35 +23,37 @@ public class SpamFilter {
 		directoryReader("\\ham");
 		directoryReader("\\ham2");
 		testHamFreq = mapWC;
-		//System.out.println(testHamFreq.get("again"));
 		
-		mapWC = new HashMap<String, Integer> ();
+		mapWC = new HashMap<String, Float> ();
 		directoryReader("\\spam");
 		testSpamFreq = mapWC;
-		Map<String, Float> mapWC = new HashMap<String, Float> ();
+		//Map<String, String> mapWC = new HashMap<String, String> ();
 		
-		for (String key: testSpamFreq.keySet()) {
-			if (testHamFreq.get(key) != null) {
-				mapWC.put(key, (float) ((testSpamFreq.get(key)/500)/
-						((float)(testSpamFreq.get(key)/500) + 
-								(float)(testHamFreq.get(key)/2750))));
-			} else {
-				mapWC.put(key, (float) 0.0);
+		storeSpamProb(testHamFreq);
+		storeSpamProb(testSpamFreq);
+		
+
+		System.out.println(mapWC);
+		System.out.println(mapWC.get("again"));
+		
+	}
+	public static void storeSpamProb (Map<String,Float> map) {
+		//Map<String, String> mapWC = new HashMap<String, String> ();
+		mapWC = new HashMap<String, Float> ();
+		
+		for (String key: map.keySet()) {
+			if (!mapWC.containsKey(key)) {
+				if (testHamFreq.get(key) != null && testSpamFreq.get(key) != null) {
+					
+					float num = (testSpamFreq.get(key)/500.0f), den1 = (testSpamFreq.get(key)/500.0f),
+					den2 = (testHamFreq.get(key)/2750.0f);
+					
+					mapWC.put(key, num/(den1+den2));
+				} else {
+					mapWC.put(key, 0.0f);
+				}
 			}
 		}
-		DecimalFormat dec = new DecimalFormat("#0.0000000");
-		float num = (testSpamFreq.get("again")/500.0f);
-		float den1 = (testSpamFreq.get("again")/500.0f);
-		float den2 = (testHamFreq.get("again")/2750.0f);
-		System.out.println(dec.format(num));
-
-		
-		System.out.println(dec.format(num/(den1+den2)));
-
-		//System.out.println(dec.format(t));
-		/*(testSpamFreq.get(key)/500)/
-		((testSpamFreq.get(key)/500) + 
-				(testHamFreq.get(key)/2750))*/
 		
 	}
 	public static void directoryReader(String keyW) {
@@ -85,10 +86,10 @@ public class SpamFilter {
 					   if ((word.length() == 1) || word.matches("-?\\d+")) {isJunk = true;}
 
 					   if (!(isJunk) && !mapWC.containsKey(word)) {
-						   mapWC.put(word, 1);
+						   mapWC.put(word, 1.0f);
 						   wordDup.add(word);
 					   } else if (!(isJunk) && !wordDup.contains(word)) {
-					        int count = mapWC.get(word);
+					        float count = mapWC.get(word);
 					        mapWC.put(word, count + 1);
 					        wordDup.add(word);
 				       }
