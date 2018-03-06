@@ -11,26 +11,41 @@ import java.util.Map;
 
 public class SpamFilter {
 	
-	private static final String FILENAME = "C:\\Jude\\assignment1_data\\data\\train\\spam";
-	private static String hamF = "ham"; private static String hamF2 = "ham2"; private static String spamF = "spam";
+	private static final String FILENAME = "C:\\Jude\\assignment1_data\\data\\train";
+	//private static String hamF = "ham", hamF2 = "ham2", spamF = "spam";
 	public static Map<String, Integer> mapWC = new HashMap<String, Integer> ();
-	public static Map<String, Integer> mapWC = new HashMap<String, Integer> ();
-	public static Map<String, Integer> mapWC = new HashMap<String, Integer> ();
+	public static Map<String, Integer> testHamFreq = new HashMap<String, Integer> ();
+	public static Map<String, Integer> testSpamFreq = new HashMap<String, Integer> ();
+
 	
-	public static void directoryReader() {
-		File folder = new File(FILENAME);
+	
+	public static void trainDir() {
+		directoryReader("\\ham");
+		directoryReader("\\ham2");
+		testHamFreq = mapWC;
+		System.out.println(testHamFreq.get("again"));
+		
+		mapWC.clear();
+		directoryReader("\\spam");
+		testSpamFreq = mapWC;
+		System.out.println(testSpamFreq.get("again"));
+		mapWC.clear();
+	}
+	public static void directoryReader(String keyW) {
+		File folder = new File(FILENAME + keyW);
 		File[] listOfFiles = folder.listFiles();
 	
 		for (File file : listOfFiles) {
 		    if (file.isFile()) {
 		    	//System.out.println(file.getName());
-		        bufferReader(file.getName());
+		        bufferReader(file.getName(), keyW);
 		    }
 		}
 	}
 	
-	public static void bufferReader(String fileName) {
-    	try (BufferedReader br = new BufferedReader(new FileReader(FILENAME + "\\" + fileName))) {
+	public static void bufferReader(String fileName, String keyW) {
+    	try (BufferedReader br = new BufferedReader(new FileReader(FILENAME 
+    			+  "\\" + keyW +  "\\" + fileName))) {
     		
 			String sCurrentLine;
 			Boolean beginCount = false;
@@ -70,8 +85,8 @@ public class SpamFilter {
 	//make it a new file everytime u run buffereader! good luck :3
 	
     public static void main(String args[]) {
-    	directoryReader();
-    	System.out.println(mapWC);
+    	trainDir();
+    	//System.out.println(mapWC);
 	}
 
 }
