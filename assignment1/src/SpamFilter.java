@@ -1,5 +1,3 @@
-package assignment1;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,6 +7,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import lab05_actual.StudentRecord;
 
 public class SpamFilter {
 	
@@ -21,8 +23,8 @@ public class SpamFilter {
 	public static float spamValue = 0.0f;
 
 	public static void testDir() {
-		//directoryReader("\\test\\ham");
 		directoryReader("\\test\\ham");
+		directoryReader("\\test\\spam");
 	}
 	
 	public static void trainDir() {
@@ -37,10 +39,6 @@ public class SpamFilter {
 		
 		storeSpamProb(testHamFreq);
 		storeSpamProb(testSpamFreq);
-		
-
-		System.out.println(mapWC);
-		System.out.println(mapWC.get("again"));
 		
 	}
 	public static void storeSpamProb (Map<String,Float> map) {
@@ -132,15 +130,17 @@ public class SpamFilter {
 		}
 		
 	}
-	//use the files.getname.equals if necessary! == wont work! files.getname does return string so
-	//make it a new file everytime u run buffereader! good luck :3
-	
-    public static void main(String args[]) {
+    public static ObservableList<TestFile> getAllFiles() {
+        ObservableList<TestFile> files = FXCollections.observableArrayList();
+        
     	trainDir();
     	testDir();
     	for (TestFile nfile: file) {
-    		System.out.println(nfile.getFilename());
+    		files.add(nfile);
     	}
-    	//
-	}
 
+        return files;
+
+    }
+
+}
