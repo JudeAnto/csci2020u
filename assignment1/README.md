@@ -12,10 +12,12 @@ Download all the java files,
 2. SpamFilter.java
 3. TestFile.java
 
-Compile the files using command prompt (admistrator)
+Compile the files using command prompt
 OR
 compile using workspaces Ex: eclipse
 
-A jar file might be added later!
+When choosing directory, always proceed to "\assignment1_data\data\"
+
+a jar execution file has also been exported
 
 (Late submission)
